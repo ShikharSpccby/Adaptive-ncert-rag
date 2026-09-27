@@ -1,0 +1,38 @@
+# --- Secrets, never commit these ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+
+# --- Node / Next.js (apps/web) ---
+node_modules/
+.next/
+out/
+.turbo/
+
+# --- Generated media: renders are large and reproducible, never belong in git ---
+*.mp4
+*.mov
+*.wav
+*.mp3
+media/
+storage/
+render-output/
+
+# --- OS / editor noise ---
+.DS_Store
+.vscode/
+.idea/
+
+# --- Local Postgres / Docker volumes if you run them locally ---
+pgdata/
