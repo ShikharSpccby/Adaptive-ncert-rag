@@ -28,6 +28,7 @@ out/
 media/
 storage/
 render-output/
+services/render-worker/output/
 
 # --- OS / editor noise ---
 .DS_Store
