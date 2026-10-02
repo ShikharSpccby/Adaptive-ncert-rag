@@ -15,8 +15,17 @@ VERIFY_URL = "http://localhost:8001"
 
 
 def check(label: str, endpoint: str, payload: dict) -> bool:
-    resp = httpx.post(f"{VERIFY_URL}{endpoint}", json=payload, timeout=10)
-    resp.raise_for_status()
+    try:
+        resp = httpx.post(f"{VERIFY_URL}{endpoint}", json=payload, timeout=10)
+        resp.raise_for_status()
+    except httpx.ConnectError:
+        print(
+            f"\nCould not reach the verify service at {VERIFY_URL}.\n"
+            "The render pipeline refuses to run without it -- that's intentional,\n"
+            "not a bug. Start it first: cd services/verify && uvicorn app.main:app --port 8001\n"
+            "(or just run ./run_pilot_demo.sh from the repo root, which starts both.)"
+        )
+        sys.exit(1)
     data = resp.json()
     ok = data.get("equivalent", data.get("correct"))
     status = "PASS" if ok else "FAIL"

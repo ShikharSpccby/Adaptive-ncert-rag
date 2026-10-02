@@ -1,0 +1,7 @@
+# Consolidated local dev install covering services/verify + services/render-worker,
+# so the pilot (run_pilot_demo.sh) works from a single virtual environment.
+# As services grow, per-service requirements.txt files remain the source of truth
+# for what each service actually needs in production/deployment.
+
+-r services/verify/requirements.txt
+-r services/render-worker/requirements.txt
