@@ -1,0 +1,4 @@
+[
+  {"question": "What does the SAS congruence rule say?", "expected": "SAS"},
+  {"question": "State the basic proportionality theorem", "expected": "proportionality"}
+]

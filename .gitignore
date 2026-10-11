@@ -37,3 +37,6 @@ services/render-worker/output/
 
 # --- Local Postgres / Docker volumes if you run them locally ---
 pgdata/
+
+# --- RAG data: source PDFs and the local vector DB are large and regenerable ---
+services/ingestion/data/

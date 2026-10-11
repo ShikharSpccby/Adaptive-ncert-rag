@@ -1,0 +1,37 @@
+# Everything tunable lives here. Override any value from the command line with
+#   --set chunking.strategy=sentence --set retrieval.top_k=8
+# so experiments never require code edits.
+
+data:
+  pdf_dir: data/pdfs            # put NCERT PDFs here, named like class10_ch06_triangles.pdf
+
+chunking:
+  strategy: structure           # sentence | paragraph | structure
+  sentences_per_chunk: 3        # used by: sentence
+  paragraphs_per_chunk: 2       # used by: paragraph
+  overlap: 1                    # units shared between neighbouring chunks (sentence/paragraph)
+  max_chars: 1500               # used by: structure (splits oversized theorem/example blocks)
+
+embedding:
+  provider: sentence_transformers   # sentence_transformers | fake (fake = offline test stand-in)
+  model: google/embeddinggemma-300m
+  batch_size: 16
+
+vector_store:
+  path: data/chroma_db
+  collection: ncert
+
+retrieval:
+  top_k: 5
+  min_score: 0.0                # cosine similarity floor; raise it to drop weak matches
+  filters: {}                   # e.g. {class_level: 10, chapter: 6, block_type: theorem}
+
+generation:
+  provider: ollama              # ollama | echo (echo = print the retrieved context, no LLM)
+  model: gemma3:4b              # whatever `ollama list` shows on your machine
+  base_url: http://localhost:11434
+  temperature: 0.2
+
+evaluation:
+  questions_file: eval_questions.json
+  strategies: [sentence, paragraph, structure]
