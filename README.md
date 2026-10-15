@@ -1,44 +1,60 @@
 # Adaptive NCERT Math Tutor
 
-AI-powered platform that turns NCERT Math textbooks (Classes 1–12) into personalized video lessons,
-adaptive remediation, and diagnostic testing.
+A project to turn the NCERT maths textbooks (Classes 1-12) into video lessons and practice that
+adapt to each student. It is early. Three pieces work on their own, and most of the planned
+folders are still empty.
 
-**Status:** Stage 0 — repo scaffold only, no functional code yet. See `docs/` for architecture.
+## What works today
 
-## Layout
+**Math verification** (`services/verify`)
+A small FastAPI service that checks maths with SymPy: are two expressions equal, are these the
+roots of this equation, does this expression evaluate to this number. It parses input with a
+restricted parser instead of `sympify`, because `sympify` runs the string as Python and the text
+will eventually come from an LLM. Tests are in `services/verify/tests`.
 
-```
-apps/web/                # Next.js frontend (not started)
-services/ingestion/       # PDF -> concept graph extraction
-services/content-gen/      # LLM script + Manim code generation
-services/verify/           # SymPy/CAS verification service — build this first
-services/render-worker/    # Sandboxed Manim + FFmpeg rendering
-services/tts-align/        # TTS + audio/video timing alignment
-services/diagnostic-engine/# Mastery tracking (BKT-style) + remediation routing
-services/item-bank/        # Question generation + difficulty tracking
-graph/                     # Knowledge graph schema/migrations
-infra/                     # Deployment configs (Docker, etc.)
-docs/                      # Architecture documents
-```
 
-## Setup
+**Textbook search (RAG)** (`services/ingestion`)
+Reads NCERT PDFs, splits them into chunks, embeds them with EmbeddingGemma, stores them in
+ChromaDB, finds the closest chunks to a question, and has Gemma answer from those chunks (through
+Ollama). Chunking can be switched in `rag/config.yaml`:
 
-1. Copy `.env.example` to `.env` and fill in real values (never commit `.env`).
-2. Create one venv and install both services' deps: `pip install -r requirements-dev.txt`
-3. (Coming in later stages: Postgres setup, Docker.)
+- `sentence`: split at sentence-ending punctuation, N sentences per chunk
+- `paragraph`: split at blank lines, N paragraphs per chunk
+- `structure`: split at lines starting with Theorem, Definition, Example, Exercise and so on
 
-## Running the integrated pilot (Stages 2 + 3 together)
+`python -m rag.cli compare` scores the three on your own test questions. Steps are in
+`docs/rag-step-by-step.md`. It is written directly on PyMuPDF, sentence-transformers and ChromaDB,
+without LangChain.
+
+## Not done yet
+
+- The three pieces above are not connected. The RAG output doesn't feed the render pipeline.
+- No LLM-written lessons or Manim code, and no narration/TTS.
+- No student-facing app, mastery tracking or question bank. The folders exist but are empty.
+- PDF text extraction loses formulas and figures, and scanned PDFs need OCR.
+
+## Running it
+
+You need Python 3.10+, ffmpeg, and the Pango/Cairo libraries that Manim uses.
 
 ```bash
+pip install -r requirements-dev.txt   # verify service + render demo
 ./run_pilot_demo.sh
 ```
 
-This starts the verify service (Stage 2), runs the render pipeline against it (Stage 3) —
-which checks every math claim in the lesson before rendering and refuses to proceed if
-verification fails or is unreachable — then shuts the verify service down. One real
-command, one real video out the other end.
+For the RAG part, see `services/ingestion/README.md`. It has its own requirements file.
 
-## Build order
+## Folders
 
-Following the lean v1 plan: `verify` service first, then `ingestion`, then `content-gen` +
-`render-worker` together, then `diagnostic-engine`, then `apps/web`.
+```
+services/verify/             working
+services/render-worker/      working (one demo scene)
+services/ingestion/          working (RAG experiments)
+services/content-gen/        empty
+services/tts-align/          empty
+services/diagnostic-engine/  empty
+services/item-bank/          empty
+apps/web/                    empty
+graph/  infra/               empty
+docs/                        notes and guides
+```
