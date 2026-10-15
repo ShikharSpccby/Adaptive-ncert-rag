@@ -1,0 +1,9 @@
+Loading weights:   0%|          | 0/314 [00:00<?, ?it/s]Loading weights:   7%|7         | 22/314 [00:00<00:01, 216.84it/s]Loading weights:  14%|#4        | 44/314 [00:00<00:01, 208.32it/s]Loading weights:  21%|##        | 65/314 [00:00<00:01, 166.19it/s]Loading weights:  26%|##6       | 83/314 [00:00<00:01, 139.83it/s]Loading weights:  31%|###1      | 98/314 [00:00<00:01, 139.54it/s]Loading weights: 100%|##########| 314/314 [00:00<00:00, 439.60it/s]
+  class9_ch01_coordinate_geometry.pdf: 122 chunks [sentence]
+  class9_ch01_coordinate_geometry.pdf: 56 chunks [paragraph]
+  class9_ch01_coordinate_geometry.pdf: 17 chunks [structure]
+
+strategy      chunks    hit@k     mrr
+sentence         122     0.25   0.132
+paragraph         56     0.25    0.25
+structure         17     0.25    0.25

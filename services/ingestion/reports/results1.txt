@@ -1,0 +1,8 @@
+  class9_ch01_coordinate_geometry.pdf: 122 chunks [sentence]
+  class9_ch01_coordinate_geometry.pdf: 56 chunks [paragraph]
+  class9_ch01_coordinate_geometry.pdf: 17 chunks [structure]
+
+strategy      chunks    hit@k     mrr
+sentence         122      0.0     0.0
+paragraph         56      0.5     0.5
+structure         17      0.5   0.125
